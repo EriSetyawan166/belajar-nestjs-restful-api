@@ -2,7 +2,7 @@ import { Injectable, Inject, HttpException } from "@nestjs/common";
 import { WINSTON_MODULE_NEST_PROVIDER } from "nest-winston";
 import { PrismaService } from "../common/prisma.service";
 import { ValidationService } from "../common/validation.service";
-import { LoginUserRequest, RegisterUserRequest, UserResponse } from "../model/user.model";
+import { LoginUserRequest, RegisterUserRequest, UpdateUserRequest, UserResponse } from "../model/user.model";
 import { Logger } from 'winston';
 import { UserValidation } from "./user.validation";
 import * as bcrypt from 'bcrypt';
@@ -89,4 +89,36 @@ export class UserService{
             name: user.name,
         };
     };
+
+    async update(user: User, request: UpdateUserRequest): Promise<UserResponse> {
+        this.logger.debug(
+          `UserService.update( ${JSON.stringify(user)} , ${JSON.stringify(request)} )`,
+        );
+    
+        const updateRequest: UpdateUserRequest = this.validationService.validate(
+          UserValidation.UPDATE,
+          request,
+        );
+    
+        if (updateRequest.name) {
+        this.logger.debug(`Updating user name to: ${updateRequest.name}`);
+          user.name = updateRequest.name;
+        }
+    
+        if (updateRequest.password) {
+          user.password = await bcrypt.hash(updateRequest.password, 10);
+        }
+    
+        const result = await this.prismaService.user.update({
+          where: {
+            username: user.username,
+          },
+          data: user,
+        });
+    
+        return {
+          name: result.name,
+          username: result.username,
+        };
+      }
 }
