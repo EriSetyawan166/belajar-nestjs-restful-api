@@ -31,3 +31,7 @@ export class UpdateAddressRequest {
     postal_code: string;
 }
 
+export class RemoveAddressRequest {
+    contact_id: number;
+    address_id: number;
+}
