@@ -26,6 +26,7 @@ describe('UserController', () => {
 
   describe('POST /api/users', () => {
     beforeEach(async () => {
+      await testService.deleteAddress();
       await testService.deleteContact();
       await testService.deleteUser();
     })
@@ -74,6 +75,7 @@ describe('UserController', () => {
 
   describe('POST /api/users/login', () => {
     beforeEach(async () => {
+      await testService.deleteAddress();
       await testService.deleteContact();
       await testService.deleteUser();
       await testService.createUser();
@@ -133,6 +135,7 @@ describe('UserController', () => {
 
   describe('GET /api/users/current', () => {
     beforeEach(async () => {
+      await testService.deleteAddress();
       await testService.deleteContact();
       await testService.deleteUser();
       await testService.createUser();
@@ -160,6 +163,7 @@ describe('UserController', () => {
 
   describe('PATCH /api/users/current', () => {
     beforeEach(async () => {
+      await testService.deleteAddress();
       await testService.deleteContact();
       await testService.deleteUser();
       await testService.createUser();
@@ -223,6 +227,7 @@ describe('UserController', () => {
 
   describe('DELETE /api/users/current', () => {
     beforeEach(async () => {
+      await testService.deleteAddress();
       await testService.deleteContact();
       await testService.deleteUser();
       await testService.createUser();
