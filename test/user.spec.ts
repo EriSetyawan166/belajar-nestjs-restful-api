@@ -26,10 +26,8 @@ describe('UserController', () => {
 
   describe('POST /api/users', () => {
     beforeEach(async () => {
-      await testService.deleteAddress();
-      await testService.deleteContact();
-      await testService.deleteUser();
-    })
+      await testService.deleteAll();
+    });
 
     it('Should be rejected if request is invalid', async () => {
       const response = await request(app.getHttpServer())
@@ -71,15 +69,13 @@ describe('UserController', () => {
       expect(response.status).toBe(400);
       expect(response.body.errors).toBeDefined();
     });
-  })
+  });
 
   describe('POST /api/users/login', () => {
     beforeEach(async () => {
-      await testService.deleteAddress();
-      await testService.deleteContact();
-      await testService.deleteUser();
+      await testService.deleteAll();
       await testService.createUser();
-    })
+    });
 
     it('Should be rejected if request is invalid', async () => {
       const response = await request(app.getHttpServer())
@@ -130,21 +126,18 @@ describe('UserController', () => {
       expect(response.status).toBe(401);
       expect(response.body.errors).toBeDefined();
     });
-    
-  })
+  });
 
   describe('GET /api/users/current', () => {
     beforeEach(async () => {
-      await testService.deleteAddress();
-      await testService.deleteContact();
-      await testService.deleteUser();
+      await testService.deleteAll();
       await testService.createUser();
-    })
+    });
 
     it('Should be rejected if token is invalid', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/users/current')
-        .set('Authorization', 'wrong')
+        .set('Authorization', 'wrong');
       logger.info(response.body);
       expect(response.status).toBe(401);
       expect(response.body.errors).toBeDefined();
@@ -153,7 +146,7 @@ describe('UserController', () => {
     it('Should be able to get user', async () => {
       const response = await request(app.getHttpServer())
         .get('/api/users/current')
-        .set('Authorization', 'test')
+        .set('Authorization', 'test');
       logger.info(response.body);
       expect(response.status).toBe(200);
       expect(response.body.data.username).toBe('test');
@@ -163,11 +156,9 @@ describe('UserController', () => {
 
   describe('PATCH /api/users/current', () => {
     beforeEach(async () => {
-      await testService.deleteAddress();
-      await testService.deleteContact();
-      await testService.deleteUser();
+      await testService.deleteAll();
       await testService.createUser();
-    })
+    });
 
     it('Should be rejected if request is invalid', async () => {
       const response = await request(app.getHttpServer())
@@ -175,7 +166,7 @@ describe('UserController', () => {
         .set('Authorization', 'test')
         .send({
           name: '',
-          password: ''
+          password: '',
         });
       logger.info(response.body);
       expect(response.status).toBe(400);
@@ -204,8 +195,7 @@ describe('UserController', () => {
         .send({
           password: 'updated',
         });
-      
-      
+
       logger.info(response.body);
       expect(response.status).toBe(200);
       expect(response.body.data.username).toBe('test');
@@ -217,26 +207,23 @@ describe('UserController', () => {
           username: 'test',
           password: 'updated',
         });
-      
+
       logger.info(response.body);
       expect(response.status).toBe(200);
       expect(response.body.data.token).toBeDefined();
     });
-
-  })
+  });
 
   describe('DELETE /api/users/current', () => {
     beforeEach(async () => {
-      await testService.deleteAddress();
-      await testService.deleteContact();
-      await testService.deleteUser();
+      await testService.deleteAll();
       await testService.createUser();
-    })
+    });
 
     it('Should be rejected if token is invalid', async () => {
       const response = await request(app.getHttpServer())
         .delete('/api/users/current')
-        .set('Authorization', 'wrong')
+        .set('Authorization', 'wrong');
       logger.info(response.body);
       expect(response.status).toBe(401);
       expect(response.body.errors).toBeDefined();
@@ -245,7 +232,7 @@ describe('UserController', () => {
     it('Should be able to logout', async () => {
       const response = await request(app.getHttpServer())
         .delete('/api/users/current')
-        .set('Authorization', 'test')
+        .set('Authorization', 'test');
       logger.info(response.body);
       expect(response.status).toBe(200);
       expect(response.body.data).toBe(true);
