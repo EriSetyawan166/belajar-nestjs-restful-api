@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from '../src/common/prisma.service';
 import * as bcrypt from 'bcrypt';
-import { Contact, User } from "@prisma/client";
+import { Address, Contact, User } from "@prisma/client";
+import { AddressResponse } from "src/model/address.model";
 
 
 @Injectable()
@@ -62,6 +63,30 @@ export class TestService {
             },
         });
     }
+
+    async getAddress(): Promise<Address> {
+        return await this.prismaService.address.findFirst({
+            where: {
+                contact: {
+                    username: 'test',
+                },
+            },
+        });
+    }
+
+    async createAddress() {
+        const contact = await this.getContact();
+        await this.prismaService.address.create({
+            data: {
+                contact_id: contact.id,
+                city: 'city test',
+                street: 'street test',
+                province: 'province test',
+                country: 'country test',
+                postal_code: '1111',
+            },
+        });
+    };
 
     async deleteAddress() {
         await this.prismaService.address.deleteMany({
