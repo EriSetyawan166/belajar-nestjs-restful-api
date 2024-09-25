@@ -10,7 +10,8 @@ import { AuthMiddleware } from './auth.middleware';
 
 @Global()
 @Module({
-        imports: [WinstonModule.forRoot({
+    imports: [WinstonModule.forRoot({
+            level: 'debug',
             format: winston.format.json(),
             transports: [new winston.transports.Console()]
         }),
